@@ -1,0 +1,153 @@
+"use client";
+
+import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Lock, Home, Building, DoorOpen, Users, IndianRupee } from "lucide-react";
+
+type Role = "owner" | "receptionist";
+
+interface SidebarProps {
+    role: Role;
+}
+
+export default function Sidebar({ role }: SidebarProps) {
+    const base = role === "owner" ? "/dashboard/owner" : "/dashboard/receptionist";
+
+    const pathname = usePathname() ?? "/";
+
+    const isExact = (href: string) => pathname === href;
+    const isSectionActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+
+    return (
+        <Card className="w-64 min-h-screen h-full flex flex-col self-stretch sticky top-0">
+            <CardHeader className="h-16 flex items-center px-4">
+                <CardTitle className="text-lg text-primary">Sentinel PMS</CardTitle>
+            </CardHeader>
+
+            <CardContent className="p-4 flex-1">
+                <nav className="flex flex-col gap-2">
+                    <Button asChild size="default" variant={isExact(base) ? "default" : "ghost"} className="justify-start">
+                        <Link href={base} className={isExact(base) ? "font-semibold" : ""}>
+                            <Home size={18} className="mr-2" />
+                            Dashboard
+                        </Link>
+                    </Button>
+
+                    {role === "owner" && (
+                    <>
+                        <Button
+                            asChild
+                            size="default"
+                            variant={isSectionActive(`${base}/properties`) ? "default" : "ghost"}
+                            className="justify-start"
+                        >
+                            <Link href={`${base}/properties`} className={isSectionActive(`${base}/properties`) ? "font-semibold" : ""}>
+                                <Building size={18} className="mr-2" />
+                                Properties
+                            </Link>
+                        </Button>
+
+                        <Button
+                            asChild
+                            size="default"
+                            variant={isSectionActive(`${base}/payments`) ? "default" : "ghost"}
+                            className="justify-start"
+                        >
+                            <Link href={`${base}/payments`} className={isSectionActive(`${base}/payments`) ? "font-semibold" : ""}>
+                                <IndianRupee size={18} className="mr-2" />
+                                Payments
+                            </Link>
+                        </Button>
+
+                        <Button
+                            size="default"
+                            variant="ghost"
+                            className="justify-between opacity-60 cursor-not-allowed"
+                            disabled
+                        >
+                            <div className="flex items-center">
+                                <Lock size={18} className="mr-2" />
+                                Alerts
+                            </div>
+                            <Badge className="text-xs bg-amber-100 text-amber-700 border border-amber-300 hover:bg-amber-100">Upcoming</Badge>
+                        </Button>
+                    </>
+                    )}
+
+                    {role === "receptionist" && (
+                    <>
+                        <Button
+                            asChild
+                            size="default"
+                            variant={isSectionActive(`${base}/rooms`) ? "default" : "ghost"}
+                            className="justify-start"
+                        >
+                            <Link href={`${base}/rooms`} className={isSectionActive(`${base}/rooms`) ? "font-semibold" : ""}>
+                                <DoorOpen size={18} className="mr-2" />
+                                Manage Rooms
+                            </Link>
+                        </Button>
+
+                        <Button
+                            asChild
+                            size="default"
+                            variant={isSectionActive(`${base}/payments`) ? "default" : "ghost"}
+                            className="justify-start"
+                        >
+                            <Link href={`${base}/payments`} className={isSectionActive(`${base}/payments`) ? "font-semibold" : ""}>
+                                <IndianRupee size={18} className="mr-2" />
+                                Payments
+                            </Link>
+                        </Button>
+
+                        <Button
+                            asChild
+                            size="default"
+                            variant={isSectionActive(`${base}/checkouts`) ? "default" : "ghost"}
+                            className="justify-start"
+                        >
+                            <Link href={`${base}/checkouts`} className={isSectionActive(`${base}/checkouts`) ? "font-semibold" : ""}>
+                                <DoorOpen size={18} className="mr-2" />
+                                Checkouts
+                            </Link>
+                        </Button>
+
+                        <Button
+                            asChild
+                            size="default"
+                            variant={isSectionActive(`${base}/bookings`) ? "default" : "ghost"}
+                            className="justify-start"
+                        >
+                            <Link href={`${base}/bookings`} className={isSectionActive(`${base}/bookings`) ? "font-semibold" : ""}>
+                                <Users size={18} className="mr-2" />
+                                Manage Bookings
+                            </Link>
+                        </Button>
+
+                        <Button
+                            size="default"
+                            variant="ghost"
+                            className="justify-between opacity-60 cursor-not-allowed"
+                            disabled
+                        >
+                            <div className="flex items-center">
+                                <Lock size={18} className="mr-2" />
+                                Group Bookings
+                            </div>
+                            <Badge className="text-xs bg-amber-100 text-amber-700 border border-amber-300 hover:bg-amber-100">Upcoming</Badge>
+                        </Button>
+                    </>
+                    )}
+                </nav>
+            </CardContent>
+
+            <div className="p-4 border-t text-sm text-muted-foreground">
+                <div className="font-medium">Signed in</div>
+            </div>
+        </Card>
+    );
+}
