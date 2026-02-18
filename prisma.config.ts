@@ -8,6 +8,7 @@ export default defineConfig({
   migrations: {
     path: "prisma/migrations",
   },
+  // @ts-expect-error prisma config typing doesn't include datasource yet
   datasource: {
     url: process.env["DIRECT_URL"],
   },
